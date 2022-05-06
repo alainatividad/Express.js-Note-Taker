@@ -39,11 +39,21 @@ notes.post("/", (req, res) => {
         id: uuidv4(),
       };
 
-      readAndAppend(newNote, "./db/db.JSON");
+      readAndAppend(newNote, "./db/db.json");
       res.json(`Note added successfully`);
     }
   } else {
     res.error("Error in adding note");
+  }
+});
+
+// DELETE Route for a specific note
+notes.delete("/:note_id", (req, res) => {
+  const noteId = req.params.note_id;
+  // Added a function in fsUtils.js to delete a specific Id from the given JSON file
+  if (noteId) {
+    deleteIdFromFile(noteId, "./db/db.json");
+    res.json("Note successfully deleted");
   }
 });
 

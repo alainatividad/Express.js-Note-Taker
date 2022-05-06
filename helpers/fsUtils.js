@@ -1,5 +1,5 @@
-const fs = require('fs');
-const util = require('util');
+const fs = require("fs");
+const util = require("util");
 
 // Promise version of fs.readFile
 const readFromFile = util.promisify(fs.readFile);
@@ -20,15 +20,34 @@ const writeToFile = (destination, content) =>
  *  @returns {void} Nothing
  */
 const readAndAppend = (content, file) => {
-  fs.readFile(file, 'utf8', (err, data) => {
+  fs.readFile(file, "utf8", (err, data) => {
     if (err) {
       console.error(err);
     } else {
       const parsedData = JSON.parse(data);
       parsedData.push(content);
       writeToFile(file, parsedData);
+      console.info(`\nData added to ${file}`);
     }
   });
 };
+/**
+ *  Function to delete a specific item with given id from a given file
+ *  @param {string} contentId The contentId you want to delete from the file.
+ *  @param {string} file The path to the file you want to save to.
+ *  @returns {void} Nothing
+ */
+const deleteIdFromFile = (contentId, file) => {
+  readFromFile(file)
+    .then((data) => JSON.parse(data))
+    .then((dataObj) => {
+      const filteredData = dataObj.filter((item) => item.id !== contentId);
 
-module.exports = { readFromFile, writeToFile, readAndAppend };
+      if (filteredData) {
+        writeToFile(file, filteredData);
+        console.info(`\nItem ${contentId} has been deleted from ${file}`);
+      }
+    });
+};
+
+module.exports = { readFromFile, writeToFile, readAndAppend, deleteIdFromFile };
