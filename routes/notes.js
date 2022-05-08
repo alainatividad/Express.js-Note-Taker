@@ -1,5 +1,6 @@
 const express = require("express");
 const notes = express.Router();
+// use uuid to handle the creation of the unique id for each notes
 const { v4: uuidv4 } = require("uuid");
 // use helper fsUtils that is available on previous class activities
 const {
@@ -10,21 +11,23 @@ const {
 
 // GET Route for retrieving all the notes
 notes.get("/", (req, res) => {
+  // when user goes to /api/notes the application loads all available notes and displays it on the left of the page
   readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
 });
 
-// GET Route for a specific note
-notes.get("/:note_id", (req, res) => {
-  const noteId = req.params.note_id;
-  readFromFile("./db/db.json")
-    .then((data) => JSON.parse(data))
-    .then((json) => {
-      const result = json.filter((note) => note.id === noteId);
-      return result.length > 0
-        ? res.json(result)
-        : res.json(`No note with ID ${noteId}`);
-    });
-});
+// // GET Route for a specific note
+// notes.get("/:note_id", (req, res) => {
+//   const noteId = req.params.note_id;
+//   readFromFile("./db/db.json")
+//     .then((data) => JSON.parse(data))
+//     .then((json) => {
+//       //
+//       const result = json.filter((note) => note.id === noteId);
+//       return result.length > 0
+//         ? res.json(result)
+//         : res.json(`No note with ID ${noteId}`);
+//     });
+// });
 
 // POST Route for a new note
 notes.post("/", (req, res) => {
